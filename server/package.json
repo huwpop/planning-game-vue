@@ -1,0 +1,17 @@
+{
+  "name": "planning-game-server",
+  "version": "1.0.0",
+  "description": "server for websockets",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "huw price",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "socket.io": "^3.0.4"
+  }
+}
