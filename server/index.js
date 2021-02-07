@@ -1,16 +1,45 @@
-const app = require('express')();
+const express = require('express');
+const app = express();
+const cors = require('cors');
+const path = require('path');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
     cors: {
-        origin: ["http://localhost:3000", "http://localhost:8080", "https://planning.hpop.dev", "http://planning.hpop.dev"],
+        origin: [
+            "http://localhost:3000",
+            "http://localhost:3000/*", 
+            "http://localhost:8080", 
+            "http://localhost:5000/*",
+            "https://planning.hpop.dev", 
+            "http://planning.hpop.dev",
+            ],
         methods: ["GET", "POST"],
-        credentials: true
+        credentials: false
     }
 });
+
+// var corsOptions = {
+//     origin: 'http://localhost:5000/*',
+//     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+//   }
+
+// app.use(cors());
+// app.options('/', cors()) 
 
 app.get('/', (req, res) => {
     res.send('<h1>Hello world</h1>');
 });
+
+// app.get('/', function (req, res) {
+//     res.sendFile(path.join(__dirname, './dist/index.html'));
+//   });
+
+// app.use('/', express.static(path.join(__dirname, 'dist')));
+
+server.listen(3000, () => {
+    console.log('Listening on port *: 3000');
+});
+
 
 var connections = 0;
 var users = {};
@@ -109,8 +138,4 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('updateTaskId', taskId);
     });
 
-});
-
-server.listen(3000, () => {
-    console.log('Listening on port *: 3000');
 });

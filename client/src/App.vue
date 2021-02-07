@@ -29,7 +29,7 @@
     </div>
     <!-- <h2 v-else>{{ username }}</h2> -->
     <div v-if="ready">
-      <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+      <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap px-0">
         <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#"
           >Planning Game</a
         >
@@ -53,29 +53,30 @@
           </li>
         </ul>
       </nav>
-      <div class="container-fluid">
+      <div class="container-fluid" style="min-height: calc(100vh - 58px);">
         <div class="row">
-          <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <nav class="col-md-2 d-md-block bg-light sidebar pl-0">
             <div class="sidebar-sticky">
               <ul class="nav flex-column">
                 <li
-                  class="nav-item"
+                  class="nav-item border-bottom row"
                   v-for="(userObj, userId) in users"
                   :key="userId"
                 >
-                  <span class="nav-link col-12" :id="'user-' + userId">
+                
+                  <span class="nav-link col-10 pl-4 pr-0" :id="'user-' + userId">
                     {{ userObj.username }} 
-                    <span class="text-right" v-if="userObj.voted"> Voted</span>
+                    
                   </span>
-                  
+                  <span class="text-right col-2 px-0" v-if="userObj.voted"><font-awesome-icon icon="check" /></span>
                 </li>
               </ul>
             </div>
           </nav>
 
-          <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+          <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4" style="min-height:calc(100vh - 99px);">
             <div
-              class="d-flex justify-content-around flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom"
+              class="d-flex justify-content-around flex-wrap flex-md-nowrap align-items-center pb-2 mb-3"
             >
               <div v-for="(card, i) in cardsInPlay" :key="i" class="card text-white bg-dark" style="max-width: 10rem" >
                 <div v-if="Array.isArray(cardsInPlay)" class="card-header text-center h2">?</div>
@@ -154,25 +155,19 @@ export default {
     return {
       users: {},
       allowedEsimates: [],
-      //userEstimate: undefined,
       cardsInPlay: [],
       taskId: null,
-
-      //newMessage: null,
-      //messages: [],
-      //typing: false,
       username: null,
       ready: false,
-      //info: [],
       connections: 0,
     };
   },
 
-  created() {
-    window.onbeforeunload = function () {
-      this.$socket.emit("leave", this.username);
-    };
-  },
+  // created() {
+  //   window.onbeforeunload = function () {
+  //     this.$socket.emit("leave", this.username);
+  //   };
+  // },
 
   sockets: {
 
