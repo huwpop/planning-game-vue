@@ -1,21 +1,24 @@
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from 'vue';
+import App from './App.vue';
 // import { BootstrapVue, 
 //  // IconsPlugin 
 // } from 'bootstrap-vue';
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 import socketio from 'socket.io-client';
 import VueSocketIO from 'vue-socket.io';
 //import VuexStore from './vuex-store.js';
 
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { check } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTimes, faChartPie, faDumpsterFire } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 
-library.add(check);
+library.add(faCheck, faTimes, faChartPie, faDumpsterFire);
 
 export const SocketInstance = socketio.connect('http://localhost:3000');
 
@@ -27,8 +30,10 @@ Vue.use(new VueSocketIO(
   {
   debug: true,
   connection: SocketInstance,
-}),
+})
 );
+
+Vue.use(VueSweetalert2);
 
 Vue.config.productionTip = false;
 

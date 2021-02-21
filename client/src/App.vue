@@ -35,8 +35,11 @@
         >
         <ul class="navbar-nav px-3">
           <li class="nav-item text-nowrap">
-            <a v-on:click="showEstimates" class="nav-link btn btn-dark" href="#">Results</a>
+            <a v-if="!displayEstimates" v-on:click="showEstimates" class="nav-link btn btn-dark" href="#">Results</a>
           </li>
+          <!-- <li class="nav-item text-nowrap">
+            <a v-if="displayEstimates" v-on:click="showStats" class="nav-link btn btn-dark" href="#"><font-awesome-icon icon="chart-pie" /></a>
+          </li> -->
         </ul>
         <input
           class="form-control form-control-dark w-100"
@@ -44,90 +47,47 @@
           placeholder="Task ID / Description"
           aria-label="Task ID / Description"
           v-model="taskId"
-          v-on:keyup.enter="sendTaskId" 
-          v-on:keydown="sendTaskId"
+          v-on:keyup="sendTaskId" 
         />
         <ul class="navbar-nav px-3">
           <li class="nav-item text-nowrap">
             <a v-on:click="resetBoard" class="nav-link" href="#">Reset</a>
           </li>
+          <li class="nav-item text-nowrap">
+            <a v-on:click="bootAll" class="nav-link" href="#"><font-awesome-icon icon="dumpster-fire" /></a>
+          </li>
         </ul>
       </nav>
       <div class="container-fluid" style="min-height: calc(100vh - 58px);">
         <div class="row">
-          <nav class="col-md-2 d-md-block bg-light sidebar pl-0">
-            <div class="sidebar-sticky">
-              <ul class="nav flex-column">
-                <li
-                  class="nav-item border-bottom row"
-                  v-for="(userObj, userId) in users"
-                  :key="userId"
-                >
-                
-                  <span class="nav-link col-10 pl-4 pr-0" :id="'user-' + userId">
-                    {{ userObj.username }} 
-                    
-                  </span>
-                  <span class="text-right col-2 px-0" v-if="userObj.voted"><font-awesome-icon icon="check" /></span>
-                </li>
-              </ul>
-            </div>
-          </nav>
-
-          <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4" style="min-height:calc(100vh - 99px);">
+          <main role="main" class="col-12 p-4">
             <div
               class="d-flex justify-content-around flex-wrap flex-md-nowrap align-items-center pb-2 mb-3"
             >
-              <div v-for="(card, i) in cardsInPlay" :key="i" class="card text-white bg-dark" style="max-width: 10rem" >
-                <div v-if="Array.isArray(cardsInPlay)" class="card-header text-center h2">?</div>
-                <div v-else class="card-header text-center h2">{{ cardsInPlay[i] }}</div>
-                <div class="card-body">
-                  <!-- <h5 class="card-title">{{ users[card].username }}</h5> -->
-                  <p v-if="Array.isArray(cardsInPlay)" class="card-text text-white text-center">
-                    {{ users[card].username }}
+
+              <div v-for="(userObj, userId) in users" :key="userId" :id="'user-' + userId" :tooltip="userObj.username" class="card text-white bg-dark" style="max-width: 10rem" >
+                <!-- <div v-if="Array.isArray(cardsInPlay)" class="card-header text-center h2">?</div> -->
+                <div  v-if="!displayEstimates" class="card-header text-center h2">
+                  <span class="text-right col-2 px-0" v-if="userObj.voted"><font-awesome-icon icon="check" /></span>
+                  <span class="text-right col-2 px-0" v-else-if="!userObj.voted"><font-awesome-icon icon="times" /></span>
+                </div>
+                <div v-else-if="displayEstimates" class="card-header text-center h2">
+                  <span class="text-right col-2 px-0" v-if="userObj.voted">{{ userObj.estimate }}</span>
+                  <span class="text-right col-2 px-0" v-else-if="!userObj.voted"><font-awesome-icon icon="times" /></span>
+                </div>
+                  <p v-if="userObj.username.length < 25" class="card-text text-white text-center px-2">
+                    {{ userObj.username }}
                   </p>
-                  <p v-else class="card-text text-white text-center">
-                    {{ users[i].username }}
+                  <p v-else class="card-text text-white text-center px-2">
+                    {{userObj.username.length}}
+                    {{ userObj.username.slice(0, 25) + "..." }}
                   </p>
                 </div>
               </div>
 
-            </div>
           </main>
         </div>
       </div>
-      <!-- <div class="card-header text-white">
-          <h4>
-            My Chat App
-            <span class="float-right">{{ connections }} connections</span>
-          </h4>
-        </div>
-        <ul class="list-group list-group-flush text-right">
-          <small v-if="typing" class="text-white">{{ typing }} is typing</small>
-          <li
-            class="list-group-item"
-            v-for="message in messages"
-            :key="message.id"
-          >
-            <span :class="{ 'float-left': message.type === 1 }">
-              {{ message.message }}
-              <small>:{{ message.user }}</small>
-            </span>
-          </li>
-        </ul>
-
-        <div class="card-body">
-          <form @submit.prevent="send">
-            <div class="form-group">
-              <input
-                type="text"
-                class="form-control"
-                v-model="newMessage"
-                placeholder="Enter message here"
-              />
-            </div>
-          </form>
-        </div> -->
       <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <div class="navbar-nav col-12 row px-0 mx-0 d-flex justify-content-around">
@@ -137,8 +97,6 @@
               :key="estimate"
             >
               <input class="d-none" :id="estimate + '-label'" type="radio" :value="estimate" v-on:click="submitEstimate(estimate)"/>
-                <!-- {{ estimate }}
-              </input> -->
               <label class="nav-link btn btn-dark col-12 mb-0" :for="estimate + '-label'">{{ estimate }}</label>
             </div>
           </div>
@@ -159,6 +117,7 @@ export default {
       taskId: null,
       username: null,
       ready: false,
+      displayEstimates: false,
       connections: 0,
     };
   },
@@ -170,7 +129,6 @@ export default {
   // },
 
   sockets: {
-
     connections: function (data) {
       this.connections = data;
     },
@@ -185,48 +143,68 @@ export default {
     },
 
     updateBored: function (data) {
-      this.cardsInPlay = data.estimates;
+      //this.cardsInPlay = data.estimates;
       this.users = data.users;
     },
 
     displayEstimates: function (data) {
-      this.cardsInPlay = data.estimates;
+      this.displayEstimates = data.displayEstimates;
+      this.users = data.users;
+      //this.cardsInPlay = data.estimates;
     },
 
-    resetGame: function(data) { //TODO duplicate of update board 
-      this.cardsInPlay = data.estimates;
+    resetGame: function (data) {
+      //TODO duplicate of update board
       this.users = data.users;
+      this.displayEstimates = data.displayEstimates;
       this.taskId = null;
     },
 
-    updateTaskId: function(data) {
-      this.taskId = data
-    }
+    updateTaskId: function (data) {
+      this.taskId = data;
+    },
 
+    bootAll: function() {
+      this.users = {};
+      this.allowedEsimates = [];
+      this.cardsInPlay = [];
+      this.taskId = null;
+      this.username = null;
+      this.ready = false;
+      this.displayEstimates = false;
+      this.connections =  0;
+      location.reload();
+    },
+
+    // showStats: function(stats) {
+    //   console.log(stats)
+    //   this.$swal('Hello Vue world!!!');
+    // }
+    
   },
 
   watch: {
-    newMessage(value) {
-      value
-        ? this.$socket.emit("typing", this.username)
-        : this.$socket.emit("stopTyping");
-    },
+    // newMessage(value) {
+    //   value
+    //     ? this.$socket.emit("typing", this.username)
+    //     : this.$socket.emit("stopTyping");
+    // },
   },
 
   methods: {
-    send() {
-      this.messages.push({
-        message: this.newMessage,
-        type: 0,
-        user: "Me",
-      });
+    // send() {
+    //   this.messages.push({
+    //     message: this.newMessage,
+    //     type: 0,
+    //     user: "Me",
+    //   });
 
-      this.$socket.emit("chat-message", {
-        message: this.newMessage,
-        user: this.username,
-      });
-      this.newMessage = null;
-    },
+    //   this.$socket.emit("chat-message", {
+    //     message: this.newMessage,
+    //     user: this.username,
+    //   });
+    //   this.newMessage = null;
+    // },
 
     submitEstimate(estimate) {
       this.$socket.emit("sendEstimate", estimate);
@@ -247,7 +225,18 @@ export default {
 
     sendTaskId() {
       this.$socket.emit("echoTaskId", this.taskId);
-    }
+    },
+
+    showStats() {
+      this.$socket.emit("showStats");
+    }, 
+
+    bootAll() {
+      var con = confirm("This will end the session and boot all users! Are you sure?")
+      if (con === true) {
+        this.$socket.emit("bootAll");
+      }
+    },
   },
 };
 </script>

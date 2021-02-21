@@ -43,7 +43,7 @@ server.listen(3000, () => {
 
 var connections = 0;
 var users = {};
-var estimates = {};
+//var estimates = {};
 
 var allowedEsimates = ["1", "2", "3", "5", "8", "13", "???", "Pass"];
 
@@ -69,7 +69,7 @@ io.on('connection', (socket) => {
             });
 
             delete users[socket.id]
-            delete estimates[socket.id]
+            //delete estimates[socket.id]
             getUsernames();
         }
     });
@@ -106,36 +106,53 @@ io.on('connection', (socket) => {
     };
 
     socket.on('sendEstimate', (estimate) => {
-        estimates[socket.id] = estimate;
+        //estimates[socket.id] = estimate;
         users[socket.id]["voted"] = true;
+        users[socket.id]["estimate"] = estimate;
         io.emit('updateBored', {
-            estimates: Object.keys(estimates),
             users: users
         })
     });
 
     socket.on('showEstimates', () => {
+        //console.log(estimates);
+        //console.log(users);
         io.emit('displayEstimates', {
-            estimates,
+            displayEstimates : true,
             users,
         });
     });
 
     socket.on('resetGameRequest', () => {
-        estimates = {};
         for (const user in users) {
             if (Object.hasOwnProperty.call(users, user)) {
                 users[user]["voted"] = false;
+                users[user]["estimate"] = false;
             }
         }
         io.emit('resetGame', {
-            estimates: [],
-            users: users
+            users: users,
+            displayEstimates : false,
         });
     });
 
     socket.on('echoTaskId', (taskId) => {
         socket.broadcast.emit('updateTaskId', taskId);
     });
+
+    socket.on('bootAll', () => {
+        users = {};
+        io.emit('bootAll');
+        socket.removeAllListeners();
+    });
+
+
+    socket.on('showStats', () => {
+        var stats = {
+                        headers: allowedEsimates,   
+                        data : []
+                    };
+        io.emit('showStats', stats);
+    })
 
 });
