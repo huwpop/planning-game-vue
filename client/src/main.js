@@ -28,7 +28,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.use(new VueSocketIO(
   {
-  debug: true,
+  debug: false,
   connection: SocketInstance,
 })
 );

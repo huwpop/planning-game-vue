@@ -138,7 +138,7 @@ export default {
     },
 
     userPool: function (data) {
-      console.log(data);
+      //console.log(data);
       this.users = data;
     },
 
