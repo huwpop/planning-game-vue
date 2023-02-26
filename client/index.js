@@ -12,7 +12,6 @@ const io = require('socket.io')(server, {
 });
 
 app.use('/', express.static(path.join(__dirname, 'dist')));
-
 server.listen(process.env.PORT, () => {
   console.log(`Listening on port *: ${process.env.PORT}`);
 });
@@ -21,7 +20,7 @@ var connections = 0;
 var users = {};
 //var estimates = {};
 
-var allowedEsimates = ['1', '2', '3', '5', '8', '13', '21', '∞', 'Pass'];
+var allowedEsimates = ['1', '2', '3', '5', '8', '???', 'Pass'];
 
 io.on('connection', (socket) => {
   var addedUser = false;

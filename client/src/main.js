@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
-// import { BootstrapVue, 
-//  // IconsPlugin 
+// import { BootstrapVue,
+//  // IconsPlugin
 // } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -14,23 +14,29 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCheck, faTimes, faChartPie, faDumpsterFire } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCheck,
+  faTimes,
+  faChartPie,
+  faDumpsterFire,
+  faLink,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
+library.add(faCheck, faTimes, faChartPie, faDumpsterFire, faLink);
 
-library.add(faCheck, faTimes, faChartPie, faDumpsterFire);
+//var url = 'http://localhost:8080';
+var url = process.env.HOSTURL;
 
-export const SocketInstance = socketio.connect('http://localhost:3000');
+export const SocketInstance = socketio.connect(url);
 
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
-Vue.component('font-awesome-icon', FontAwesomeIcon)
-
-
-Vue.use(new VueSocketIO(
-  {
-  debug: false,
-  connection: SocketInstance,
-})
+Vue.use(
+  new VueSocketIO({
+    debug: false,
+    connection: SocketInstance,
+  })
 );
 
 Vue.use(VueSweetalert2);
@@ -38,5 +44,5 @@ Vue.use(VueSweetalert2);
 Vue.config.productionTip = false;
 
 new Vue({
-  render: h => h(App),
+  render: (h) => h(App),
 }).$mount('#app');

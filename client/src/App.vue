@@ -35,7 +35,13 @@
         >
         <ul class="navbar-nav px-3">
           <li class="nav-item text-nowrap">
-            <a v-if="!displayEstimates" v-on:click="showEstimates" class="nav-link btn btn-dark" href="#">Results</a>
+            <a
+              v-if="!displayEstimates"
+              v-on:click="showEstimates"
+              class="nav-link btn btn-dark"
+              href="#"
+              >Results</a
+            >
           </li>
           <!-- <li class="nav-item text-nowrap">
             <a v-if="displayEstimates" v-on:click="showStats" class="nav-link btn btn-dark" href="#"><font-awesome-icon icon="chart-pie" /></a>
@@ -47,57 +53,101 @@
           placeholder="Task ID / Description"
           aria-label="Task ID / Description"
           v-model="taskId"
-          v-on:keyup="sendTaskId" 
+          v-on:keyup="sendTaskId"
         />
+        <a v-on:click="toJiraTask" class="nav-link text-secondary" href="#">
+          <font-awesome-icon icon="link" />
+        </a>
         <ul class="navbar-nav px-3">
           <li class="nav-item text-nowrap">
             <a v-on:click="resetBoard" class="nav-link" href="#">Reset</a>
           </li>
           <li class="nav-item text-nowrap">
-            <a v-on:click="bootAll" class="nav-link" href="#"><font-awesome-icon icon="dumpster-fire" /></a>
+            <a v-on:click="bootAll" class="nav-link" href="#">
+              <font-awesome-icon icon="dumpster-fire" />
+            </a>
           </li>
         </ul>
       </nav>
-      <div class="container-fluid" style="min-height: calc(100vh - 58px);">
+      <div class="container-fluid" style="">
         <div class="row">
           <main role="main" class="col-12 p-4">
             <div
-              class="d-flex justify-content-around flex-wrap flex-md-nowrap align-items-center pb-2 mb-3"
+              class="row d-flex justify-content-around flex-wrap align-items-center pb-2 mb-3"
             >
-
-              <div v-for="(userObj, userId) in users" :key="userId" :id="'user-' + userId" :tooltip="userObj.username" class="card text-white bg-dark" style="max-width: 10rem" >
-                <!-- <div v-if="Array.isArray(cardsInPlay)" class="card-header text-center h2">?</div> -->
-                <div  v-if="!displayEstimates" class="card-header text-center h2">
-                  <span class="text-right col-2 px-0" v-if="userObj.voted"><font-awesome-icon icon="check" /></span>
-                  <span class="text-right col-2 px-0" v-else-if="!userObj.voted"><font-awesome-icon icon="times" /></span>
-                </div>
-                <div v-else-if="displayEstimates" class="card-header text-center h2">
-                  <span class="text-right col-2 px-0" v-if="userObj.voted">{{ userObj.estimate }}</span>
-                  <span class="text-right col-2 px-0" v-else-if="!userObj.voted"><font-awesome-icon icon="times" /></span>
-                </div>
-                  <p v-if="userObj.username.length < 25" class="card-text text-white text-center px-2">
+              <div
+                v-for="(userObj, userId) in users"
+                :key="userId"
+                :id="'user-' + userId"
+                :tooltip="userObj.username"
+                class="col-2 d-flex justify-content-center p-3"
+              >
+                <div class="card text-white bg-dark" style="max-width: 10rem">
+                  <!-- <div v-if="Array.isArray(cardsInPlay)" class="card-header text-center h2">?</div> -->
+                  <div
+                    v-if="!displayEstimates"
+                    class="card-header text-center h2"
+                  >
+                    <span class="text-right col-2 px-0" v-if="userObj.voted"
+                      ><font-awesome-icon icon="check"
+                    /></span>
+                    <span
+                      class="text-right col-2 px-0"
+                      v-else-if="!userObj.voted"
+                      ><font-awesome-icon icon="times"
+                    /></span>
+                  </div>
+                  <div
+                    v-else-if="displayEstimates"
+                    class="card-header text-center h2"
+                  >
+                    <span class="text-right col-2 px-0" v-if="userObj.voted">{{
+                      userObj.estimate
+                    }}</span>
+                    <span
+                      class="text-right col-2 px-0"
+                      v-else-if="!userObj.voted"
+                      ><font-awesome-icon icon="times"
+                    /></span>
+                  </div>
+                  <p
+                    v-if="userObj.username.length < 25"
+                    class="card-text text-white text-center px-2"
+                  >
                     {{ userObj.username }}
                   </p>
                   <p v-else class="card-text text-white text-center px-2">
-                    {{userObj.username.length}}
-                    {{ userObj.username.slice(0, 25) + "..." }}
+                    {{ userObj.username.length }}
+                    {{ userObj.username.slice(0, 25) + '...' }}
                   </p>
                 </div>
               </div>
-
+            </div>
           </main>
         </div>
       </div>
       <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
         <div class="collapse navbar-collapse" id="navbarCollapse">
-          <div class="navbar-nav col-12 row px-0 mx-0 d-flex justify-content-around">
+          <div
+            class="navbar-nav col-12 row px-0 mx-0 d-flex justify-content-around"
+          >
             <div
               class="nav-item col"
               v-for="estimate in allowedEsimates"
               :key="estimate"
             >
-              <input class="d-none" :id="estimate + '-label'" type="radio" :value="estimate" v-on:click="submitEstimate(estimate)"/>
-              <label class="nav-link btn btn-dark col-12 mb-0" :for="estimate + '-label'">{{ estimate }}</label>
+              <input
+                class="d-none"
+                :id="estimate + '-label'"
+                type="radio"
+                :value="estimate"
+                v-on:click="submitEstimate(estimate)"
+              />
+              <label
+                class="nav-link btn btn-dark col-12 mb-0"
+                :for="estimate + '-label'"
+                >{{ estimate }}</label
+              >
             </div>
           </div>
         </div>
@@ -108,7 +158,7 @@
 
 <script>
 export default {
-  name: "App",
+  name: 'App',
   data() {
     return {
       users: {},
@@ -129,38 +179,38 @@ export default {
   // },
 
   sockets: {
-    connections: function (data) {
+    connections: function(data) {
       this.connections = data;
     },
 
-    allowedEsimates: function (data) {
+    allowedEsimates: function(data) {
       this.allowedEsimates = data;
     },
 
-    userPool: function (data) {
+    userPool: function(data) {
       //console.log(data);
       this.users = data;
     },
 
-    updateBored: function (data) {
+    updateBored: function(data) {
       //this.cardsInPlay = data.estimates;
       this.users = data.users;
     },
 
-    displayEstimates: function (data) {
+    displayEstimates: function(data) {
       this.displayEstimates = data.displayEstimates;
       this.users = data.users;
       //this.cardsInPlay = data.estimates;
     },
 
-    resetGame: function (data) {
+    resetGame: function(data) {
       //TODO duplicate of update board
       this.users = data.users;
       this.displayEstimates = data.displayEstimates;
       this.taskId = null;
     },
 
-    updateTaskId: function (data) {
+    updateTaskId: function(data) {
       this.taskId = data;
     },
 
@@ -172,7 +222,7 @@ export default {
       this.username = null;
       this.ready = false;
       this.displayEstimates = false;
-      this.connections =  0;
+      this.connections = 0;
       location.reload();
     },
 
@@ -180,7 +230,6 @@ export default {
     //   console.log(stats)
     //   this.$swal('Hello Vue world!!!');
     // }
-    
   },
 
   watch: {
@@ -207,34 +256,45 @@ export default {
     // },
 
     submitEstimate(estimate) {
-      this.$socket.emit("sendEstimate", estimate);
+      this.$socket.emit('sendEstimate', estimate);
     },
 
     addUser() {
       this.ready = true;
-      this.$socket.emit("joined", this.username);
+      this.$socket.emit('joined', this.username);
     },
 
     showEstimates() {
-      this.$socket.emit("showEstimates");
+      this.$socket.emit('showEstimates');
     },
 
     resetBoard() {
-      this.$socket.emit("resetGameRequest");
+      this.$socket.emit('resetGameRequest');
     },
 
     sendTaskId() {
-      this.$socket.emit("echoTaskId", this.taskId);
+      this.$socket.emit('echoTaskId', this.taskId);
+    },
+
+    toJiraTask() {
+      if (this.taskId) {
+        var url = `https://acquiring.atlassian.net/browse/${this.taskId}`;
+        window.open(url, '_blank').focus();
+      } else {
+        alert('A valid task ID such as "TRP-123" is required');
+      }
     },
 
     showStats() {
-      this.$socket.emit("showStats");
-    }, 
+      this.$socket.emit('showStats');
+    },
 
     bootAll() {
-      var con = confirm("This will end the session and boot all users! Are you sure?")
+      var con = confirm(
+        'This will end the session and boot all users! Are you sure?'
+      );
       if (con === true) {
-        this.$socket.emit("bootAll");
+        this.$socket.emit('bootAll');
       }
     },
   },

@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "start": "vue-cli-service build && node index.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
@@ -22,7 +23,10 @@
     "vue-chartjs": "^3.5.1",
     "vue-socket.io": "^3.0.10",
     "vue-sweetalert2": "^4.2.0",
-    "vuex": "^3.6.0"
+    "vuex": "^3.6.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "socket.io": "^3.0.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
