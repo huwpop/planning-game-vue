@@ -2,7 +2,6 @@ FROM node:16-alpine as planning-game
 
 WORKDIR /usr/src/app
 ENV PORT 3000
-# ENV HOSTURL https://a80d-81-156-187-200.ngrok.io
 
 
 WORKDIR /app
