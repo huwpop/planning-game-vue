@@ -1,4 +1,4 @@
-FROM node:16-alpine as planning-game
+FROM node:19-alpine as planning-game
 
 WORKDIR /usr/src/app
 ENV PORT 3000
